@@ -2,5 +2,8 @@ require "./bronzite/*"
 
 # TODO: Write documentation for `Bronzite`
 module Bronzite
-  # TODO: Put your code here
+  def self.parse(uri : String)
+    xml_string = Bronzite::Resolver.new(uri).resolve
+    Bronzite::Parser.new(xml_string).parse
+  end
 end
