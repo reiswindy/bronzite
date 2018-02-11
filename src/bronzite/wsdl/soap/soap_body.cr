@@ -18,6 +18,8 @@ module Bronzite
         getter :namespace
 
         def self.parse(node : XML::Node, ctx : Bronzite::Document)
+          ns = Bronzite::Wsdl.parse_namespaces(node.namespaces)
+
           sb_use = node["use"]
           sb_parts = nil.as(Array(Bronzite::Wsdl::Part)?)
 
@@ -26,7 +28,7 @@ module Bronzite
             b_node = op_node.parent.not_nil!
 
             prefix, match, local = b_node["type"].rpartition(":")
-            pt = ctx.port_types["#{ctx.namespaces[prefix]}:#{local}"]
+            pt = ctx.port_types["#{ns[prefix]}:#{local}"]
             op = pt.operations["#{op_node["name"]}"]
 
             sb_parts = node["parts"].split(" ").reduce([] of Bronzite::Wsdl::Part) do |memo, p|

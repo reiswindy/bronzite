@@ -2,18 +2,22 @@ require "./wsdl/*"
 
 module Bronzite
   class Document
+    @base_uri : String
     @target_namespace : String
     @namespaces : Hash(String, String)
+    @imports : Hash(String, Bronzite::Document)
     @messages : Hash(String, Bronzite::Wsdl::Message)
     @port_types : Hash(String, Bronzite::Wsdl::PortType)
     @bindings : Hash(String, Bronzite::Wsdl::Binding)
     @services : Hash(String, Bronzite::Wsdl::Service)
 
-    def initialize(@target_namespace, @namespaces, @messages, @port_types, @bindings, @services)
+    def initialize(@base_uri, @target_namespace, @namespaces, @imports, @messages, @port_types, @bindings, @services)
     end
 
+    getter :base_uri
     getter :target_namespace
     getter :namespaces
+    getter :imports
     getter :messages
     getter :port_types
     getter :bindings

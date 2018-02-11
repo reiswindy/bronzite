@@ -1,5 +1,6 @@
 require "xml"
 require "./address"
+require "./namespaces"
 
 module Bronzite
   module Wsdl
@@ -16,10 +17,12 @@ module Bronzite
       getter :address
 
       def self.parse(node : XML::Node, ctx : Bronzite::Document)
+        ns = Bronzite::Wsdl.parse_namespaces(node.namespaces)
+
         sp_name = node["name"]
 
         prefix, match, local = node["binding"].rpartition(":")
-        sp_binding = ctx.bindings["#{ctx.namespaces[prefix]}:#{local}"]
+        sp_binding = ctx.bindings["#{ns[prefix]}:#{local}"]
 
         sp_address = Address.parse(node.children.select { |c| c.name == "address" }.first)
         Port.new(sp_name, sp_binding, sp_address)

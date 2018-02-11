@@ -1,33 +1,46 @@
 require "xml"
 require "http"
 require "./document"
+require "./utils/xml_document"
 require "./wsdl/*"
 
 module Bronzite
   class Parser
+    @base_uri : String
     @xml_document : XML::Node
 
-    def initialize(xml : String)
-      @xml_document = XML.parse(xml)
+    def initialize(xml : Bronzite::Utils::XMLDocument)
+      @base_uri = xml.base_uri
+      @xml_document = XML.parse(xml.contents)
     end
 
     def parse
       root = @xml_document.root.not_nil!
 
       w_target_namespace = root["targetNamespace"]
-      w_namespaces = parse_namespaces(root)
+      w_namespaces = Bronzite::Wsdl.parse_namespaces(root.namespaces)
 
+      w_imports = {} of String => Bronzite::Document
       w_messages = {} of String => Bronzite::Wsdl::Message
       w_port_types = {} of String => Bronzite::Wsdl::PortType
       w_bindings = {} of String => Bronzite::Wsdl::Binding
       w_services = {} of String => Bronzite::Wsdl::Service
 
-      ctx = Document.new(w_target_namespace, w_namespaces, w_messages, w_port_types, w_bindings, w_services)
+      ctx = Bronzite::Document.new(@base_uri, w_target_namespace, w_namespaces, w_imports, w_messages, w_port_types, w_bindings, w_services)
 
       root.children.each do |c|
         case name = c.name
         when "import"
-        when "include"
+          xml_doc = Bronzite::Resolver.new(c["location"], @base_uri).resolve
+          import_doc = Bronzite::Parser.new(xml_doc).parse
+
+          # TODO: Handle types?
+          import_doc.messages.each { |qname, m| ctx.messages[qname] = m }
+          import_doc.port_types.each { |qname, pt| ctx.port_types[qname] = pt }
+          import_doc.bindings.each { |qname, b| ctx.bindings[qname] = b }
+          import_doc.services.each { |name, s| ctx.services[name] = s }
+
+          ctx.imports[c["namespace"]] = import_doc
         when "types"
         when "message"
           message = parse_message(c, ctx)
@@ -48,14 +61,6 @@ module Bronzite
       end
 
       ctx
-    end
-
-    # Parse namespaces from "definitions" node
-    def parse_namespaces(root : XML::Node)
-      root.namespaces.reduce({} of String => String) do |accum, (key, value)|
-        accum[key.sub("xmlns:", "")] = value.to_s
-        accum
-      end
     end
 
     # Parse message from "message" nodes

@@ -22,13 +22,17 @@ module Bronzite
         o_output = nil.as(Message?)
 
         node.children.select { |c| c.name == "input" }.first?.try do |e|
+          ns = Bronzite::Wsdl.parse_namespaces(e.namespaces)
+
           prefix, match, local = e["message"].rpartition(":")
-          o_input = ctx.messages["#{ctx.namespaces[prefix]}:#{local}"]
+          o_input = ctx.messages["#{ns[prefix]}:#{local}"]
         end
 
         node.children.select { |c| c.name == "output" }.first?.try do |e|
+          ns = Bronzite::Wsdl.parse_namespaces(e.namespaces)
+
           prefix, match, local = e["message"].rpartition(":")
-          o_output = ctx.messages["#{ctx.namespaces[prefix]}:#{local}"]
+          o_output = ctx.messages["#{ns[prefix]}:#{local}"]
         end
 
         Operation.new(o_name, o_input, o_output)

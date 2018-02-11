@@ -3,19 +3,19 @@ require "../spec_helper"
 
 describe "Bronzite::Resolver" do
   context "with: Remote URI" do
-    resolver = Bronzite::Resolver.new("http://www.tepsa.com.pe/wssisvyr/SisvyrService?wsdl")
+    xml_doc = Bronzite::Resolver.new("http://www.dataaccess.com/webservicesserver/numberconversion.wso?wsdl").resolve
 
     it "fetches file from remote url using http" do
-      resolver.resolve.size.should be > 0
+      xml_doc.contents.size.should be > 0
     end
   end
 
   context "with: Local URI" do
     filename = SpecHelper::Samples["numberconversion.wsdl"]
-    resolver = Bronzite::Resolver.new(filename)
+    xml_doc = Bronzite::Resolver.new(filename).resolve
 
     it "fetches file from local directory" do
-      resolver.resolve.size.should be > 0
+      xml_doc.contents.size.should be > 0
     end
   end
 end

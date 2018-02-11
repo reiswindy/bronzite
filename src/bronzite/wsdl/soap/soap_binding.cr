@@ -17,11 +17,13 @@ module Bronzite
         getter :style
 
         def self.parse(node : XML::Node, ctx : Bronzite::Document)
+          ns = Bronzite::Wsdl.parse_namespaces(node.namespaces)
+
           b_name = node["name"]
           b_qname = "#{ctx.target_namespace}:#{b_name}"
 
           prefix, match, local = node["type"].rpartition(":")
-          b_port_type = ctx.port_types["#{ctx.namespaces[prefix]}:#{local}"]
+          b_port_type = ctx.port_types["#{ns[prefix]}:#{local}"]
 
           bind = node.children.select { |c| c.name == "binding" }.first
           b_transport = bind["transport"]

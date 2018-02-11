@@ -74,4 +74,20 @@ describe "Bronzite::Parser" do
       ])
     end
   end
+
+  context "using billservice.wsdl" do
+    xml = Bronzite::Resolver.new(SpecHelper::Samples["billservice.wsdl"]).resolve
+    parser = Bronzite::Parser.new(xml)
+    document = parser.parse
+
+    it "parses imports" do
+      document.messages["http://service.sunat.gob.pe:getStatus"].should eq(
+        Bronzite::Wsdl::Message.new(
+          "getStatus",
+          "http://service.sunat.gob.pe:getStatus",
+          {"parameters" => Bronzite::Wsdl::Part.new("parameters", "getStatus")}
+        )
+      )
+    end
+  end
 end

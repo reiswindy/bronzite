@@ -23,10 +23,12 @@ module Bronzite
         getter :header_faults
 
         def self.parse(node : XML::Node, ctx : Bronzite::Document)
+          ns = Bronzite::Wsdl.parse_namespaces(node.namespaces)
+
           sh_use = node["use"]
 
           prefix, match, local = node["message"].rpartition(":")
-          sh_message = ctx.messages["#{ctx.namespaces[prefix]}:#{local}"]
+          sh_message = ctx.messages["#{ns[prefix]}:#{local}"]
           sh_part = sh_message.parts[node["part"]]
 
           sh_encoding_style = node["encoding_style"]?
