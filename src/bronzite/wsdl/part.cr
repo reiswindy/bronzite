@@ -37,8 +37,8 @@ module Bronzite
 
       def ==(other : self)
         @name == other.name &&
-          @element == other.element &&
-          @type_definition == other.type_definition
+        @element == other.element &&
+        @type_definition == other.type_definition
       end
     end
   end

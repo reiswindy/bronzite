@@ -45,11 +45,11 @@ module Bronzite
 
         def ==(other : self)
           @use == other.use &&
-            @message == other.message &&
-            @part == other.part &&
-            @encoding_style == other.encoding_style &&
-            @namespace == other.namespace &&
-            @header_faults == other.header_faults
+          @message == other.message &&
+          @part == other.part &&
+          @encoding_style == other.encoding_style &&
+          @namespace == other.namespace &&
+          @header_faults == other.header_faults
         end
       end
     end

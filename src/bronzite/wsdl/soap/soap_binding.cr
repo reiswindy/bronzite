@@ -40,11 +40,11 @@ module Bronzite
 
         def ==(other : self)
           @name == other.name &&
-            @qname == other.qname &&
-            @port_type == other.port_type &&
-            @transport == other.transport &&
-            @style == other.style &&
-            @binding_operations == other.binding_operations
+          @qname == other.qname &&
+          @port_type == other.port_type &&
+          @transport == other.transport &&
+          @style == other.style &&
+          @binding_operations == other.binding_operations
         end
       end
     end

@@ -30,8 +30,8 @@ module Bronzite
 
       def ==(other : self)
         @name == other.name &&
-          @binding == other.binding &&
-          @address == other.address
+        @binding == other.binding &&
+        @address == other.address
       end
     end
   end

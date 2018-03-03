@@ -45,9 +45,9 @@ module Bronzite
 
         def ==(other : self)
           @use == other.use &&
-            @parts == other.parts &&
-            @encoding_style == other.encoding_style &&
-            @namespace == other.namespace
+          @parts == other.parts &&
+          @encoding_style == other.encoding_style &&
+          @namespace == other.namespace
         end
       end
     end

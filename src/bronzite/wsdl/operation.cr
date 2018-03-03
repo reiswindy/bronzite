@@ -40,8 +40,8 @@ module Bronzite
 
       def ==(other : self)
         @name == other.name &&
-          @input == other.input &&
-          @output == other.output
+        @input == other.input &&
+        @output == other.output
       end
     end
   end

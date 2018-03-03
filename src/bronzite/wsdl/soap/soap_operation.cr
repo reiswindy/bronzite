@@ -40,10 +40,10 @@ module Bronzite
 
         def ==(other : self)
           @name == other.name &&
-            @input == other.input &&
-            @output == other.output &&
-            @soap_action == other.soap_action &&
-            @style == other.style
+          @input == other.input &&
+          @output == other.output &&
+          @soap_action == other.soap_action &&
+          @style == other.style
         end
       end
     end

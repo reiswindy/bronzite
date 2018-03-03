@@ -29,7 +29,7 @@ module Bronzite
 
       def ==(other : self)
         @name == other.name &&
-          @ports == other.ports
+        @ports == other.ports
       end
     end
   end

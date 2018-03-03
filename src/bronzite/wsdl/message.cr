@@ -33,8 +33,8 @@ module Bronzite
 
       def ==(other : self)
         @name == other.name &&
-          @qname == other.qname &&
-          @parts == other.parts
+        @qname == other.qname &&
+        @parts == other.parts
       end
     end
   end
