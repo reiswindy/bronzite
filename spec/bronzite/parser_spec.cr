@@ -62,8 +62,8 @@ describe "Bronzite::Parser" do
         "http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding",
         "http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding12",
       ])
-      document.bindings["http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding"].should be_a(Bronzite::Wsdl::Soap::SoapBinding)
-      document.bindings["http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding12"].should be_a(Bronzite::Wsdl::Soap12::Soap12Binding)
+      document.bindings["http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding"].should be_a(Bronzite::Wsdl::Binding)
+      document.bindings["http://www.dataaccess.com/webservicesserver/:NumberConversionSoapBinding12"].should be_a(Bronzite::Wsdl::Binding)
     end
 
     it "parses services" do

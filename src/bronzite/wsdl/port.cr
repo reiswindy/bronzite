@@ -1,6 +1,4 @@
-require "xml"
 require "./address"
-require "./namespaces"
 
 module Bronzite
   module Wsdl
@@ -24,8 +22,20 @@ module Bronzite
         prefix, match, local = node["binding"].rpartition(":")
         sp_binding = ctx.bindings["#{ns[prefix]}:#{local}"]
 
-        sp_address = Address.parse(node.children.select { |c| c.name == "address" }.first)
-        Port.new(sp_name, sp_binding, sp_address)
+        port_address = node.first_element_child.not_nil!
+        sp_address = Address.parse(port_address)
+
+        is_soap = false
+        port_address.namespace.try do |address_type|
+          case url = address_type.href.not_nil!
+          when Bronzite::Wsdl::SOAP_1_1, Bronzite::Wsdl::SOAP_1_2
+            is_soap = true
+          end
+        end
+
+        if is_soap
+          Port.new(sp_name, sp_binding, sp_address)
+        end
       end
 
       def ==(other : self)

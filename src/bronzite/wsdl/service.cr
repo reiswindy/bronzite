@@ -1,4 +1,3 @@
-require "xml"
 require "./port"
 
 module Bronzite
@@ -19,7 +18,9 @@ module Bronzite
           case e.name
           when "port"
             sp = Port.parse(e, ctx)
-            memo[sp.name] = sp
+            if sp
+              memo[sp.name] = sp
+            end
           end
           memo
         end

@@ -42,11 +42,11 @@ module Bronzite
       s_ports = Hash(Symbol, Hash(String, Bronzite::Wsdl::Port)).new(Hash(String, Bronzite::Wsdl::Port).new)
       @services.each do |s_name, service|
         service.ports.each do |p_name, port|
-          case port.binding
-          when Bronzite::Wsdl::Soap::SoapBinding
+          case port.binding.type
+          when :soap
             s_ports[:soap] = s_ports[:soap]
             s_ports[:soap][p_name] = port
-          when Bronzite::Wsdl::Soap12::Soap12Binding
+          when :soap12
             s_ports[:soap12] = s_ports[:soap12]
             s_ports[:soap12][p_name] = port
           end

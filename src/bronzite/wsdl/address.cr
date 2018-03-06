@@ -1,5 +1,4 @@
 require "xml"
-require "./namespaces"
 
 module Bronzite
   module Wsdl

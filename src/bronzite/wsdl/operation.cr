@@ -1,4 +1,5 @@
 require "xml"
+require "./message"
 
 module Bronzite
   module Wsdl
