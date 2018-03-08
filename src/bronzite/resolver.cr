@@ -1,12 +1,13 @@
 require "http"
 require "uri"
+require "xml"
 require "./utils/xml_document"
 
 module Bronzite
   class Resolver
-    @document = nil.as(Bronzite::Utils::XMLDocument?)
+    @document = nil.as(XML::Node?)
 
-    def initialize(@uri : String, @base_uri : String? = nil)
+    def initialize(@uri : String)
     end
 
     getter :document
@@ -18,16 +19,6 @@ module Bronzite
       when "http", "https"
         return load_remote(uri)
       when nil
-        if @base_uri
-          path = File.join([@base_uri.to_s, @uri])
-          uri = URI.parse(path)
-          case uri.scheme
-          when "http", "https"
-            return load_remote(uri)
-          when nil
-            return load_local(path)
-          end
-        end
         return load_local(@uri)
       end
       raise "Could not parse Uri"
@@ -38,14 +29,18 @@ module Bronzite
       if !response.success?
         raise "Could not fetch remote Wsdl document #{uri}"
       end
-      @document = Bronzite::Utils::XMLDocument.new(response.body, File.dirname(uri.path.to_s))
+      xml_doc = XML.parse(response.body)
+      Bronzite::Utils.set_node_doc_url(xml_doc, File.dirname(uri.path.to_s))
+      @document = xml_doc
     end
 
     private def load_local(path)
       if !File.exists?(path)
         raise "Could not fetch local Wsdl document #{path}"
       end
-      @document = Bronzite::Utils::XMLDocument.new(File.read(path), File.dirname(path))
+      xml_doc = XML.parse(File.read(path))
+      Bronzite::Utils.set_node_doc_url(xml_doc, File.dirname(path))
+      @document = xml_doc
     end
   end
 end

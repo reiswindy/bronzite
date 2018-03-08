@@ -6,17 +6,15 @@ require "./wsdl/*"
 
 module Bronzite
   class Parser
-    @base_uri : String
     @xml_document : XML::Node
 
-    def initialize(xml : Bronzite::Utils::XMLDocument)
-      @base_uri = xml.base_uri
-      @xml_document = XML.parse(xml.contents)
+    def initialize(@xml_document)
     end
 
     def parse
       root = @xml_document.root.not_nil!
 
+      w_base_uri = Bronzite::Utils.get_node_doc_url(root)
       w_target_namespace = root["targetNamespace"]
       w_namespaces = Bronzite::Wsdl.parse_namespaces(root.namespaces)
 
@@ -26,13 +24,15 @@ module Bronzite
       w_bindings = {} of String => Bronzite::Wsdl::Binding
       w_services = {} of String => Bronzite::Wsdl::Service
 
-      ctx = Bronzite::Document.new(@base_uri, w_target_namespace, w_namespaces, w_imports, w_messages, w_port_types, w_bindings, w_services)
+      ctx = Bronzite::Document.new(w_base_uri, w_target_namespace, w_namespaces, w_imports, w_messages, w_port_types, w_bindings, w_services)
 
       root.children.each do |c|
         case name = c.name
         when "import"
-          xml_doc = Bronzite::Resolver.new(c["location"], @base_uri).resolve
-          import_doc = Bronzite::Parser.new(xml_doc).parse
+          import_uri = File.join([w_base_uri, c["location"]])
+          import_xml_doc = Bronzite::Resolver.new(import_uri).resolve
+
+          import_doc = Bronzite::Parser.new(import_xml_doc).parse
 
           # TODO: Handle types?
           import_doc.messages.each { |qname, m| ctx.messages[qname] = m }
