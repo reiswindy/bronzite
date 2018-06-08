@@ -2,8 +2,7 @@ require "./bronzite/*"
 
 # TODO: Write documentation for `Bronzite`
 module Bronzite
-  def self.parse(uri : String)
-    xml_string = Bronzite::Resolver.new(uri).resolve
-    Bronzite::Parser.new(xml_string).parse
+  def self.parse(uri : String, version : Symbol = :soap)
+    soap_client = Client.new(uri, version)
   end
 end
