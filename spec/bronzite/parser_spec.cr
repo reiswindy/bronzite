@@ -2,7 +2,7 @@ require "../spec_helper"
 
 describe "Bronzite::Parser" do
   context "Using numberconversion.wsdl" do
-    xml = Bronzite::Resolver.new(SpecHelper::Samples["numberconversion.wsdl"]).resolve
+    xml = Bronzite::Resolver.new.resolve(SpecHelper::Samples["numberconversion.wsdl"])
     parser = Bronzite::Parser.new(xml)
     document = parser.parse
 
@@ -76,7 +76,7 @@ describe "Bronzite::Parser" do
   end
 
   context "using billservice.wsdl" do
-    xml = Bronzite::Resolver.new(SpecHelper::Samples["billservice.wsdl"]).resolve
+    xml = Bronzite::Resolver.new.resolve(SpecHelper::Samples["billservice.wsdl"])
     parser = Bronzite::Parser.new(xml)
     document = parser.parse
 

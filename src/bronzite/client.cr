@@ -9,10 +9,9 @@ module Bronzite
     @functions : Hash(String, String)
 
     def initialize(uri : String, @version = :soap)
-      resolver = Bronzite::Resolver.new(uri)
-      resolver.resolve
+      document = Bronzite::Resolver.new.resolve(uri)
       @builder = Bronzite::Builder.new(@version)
-      @document = Bronzite::Parser.new(resolver.document.not_nil!).parse
+      @document = Bronzite::Parser.new(document).parse
       @functions = @document.soap_functions[@version]
     end
 

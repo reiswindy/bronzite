@@ -1,7 +1,7 @@
 require "xml"
 require "http"
 require "./document"
-require "./utils/xml_document"
+require "./core_ext/xml"
 require "./wsdl/*"
 
 module Bronzite
@@ -12,9 +12,12 @@ module Bronzite
     end
 
     def parse
-      root = @xml_document.root.not_nil!
+      root = @xml_document.root
+      if !root
+        raise "Empty WSDL document received!"
+      end
 
-      w_base_uri = Bronzite::Utils.get_node_doc_url(root)
+      w_base_uri = root.base_url
       w_target_namespace = root["targetNamespace"]
       w_namespaces = Bronzite::Wsdl.parse_namespaces(root.namespaces)
 
@@ -30,7 +33,7 @@ module Bronzite
         case name = c.name
         when "import"
           import_uri = File.join([w_base_uri, c["location"]])
-          import_xml_doc = Bronzite::Resolver.new(import_uri).resolve
+          import_xml_doc = Bronzite::Resolver.new.resolve(import_uri)
 
           import_doc = Bronzite::Parser.new(import_xml_doc).parse
 

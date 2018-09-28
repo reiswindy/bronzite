@@ -6,13 +6,18 @@ module Bronzite
 
   class Builder
     @soap_version : Symbol
+    @soap_namespace : String
+    @envelope_namespace : String
 
     def initialize(@soap_version)
+      raise "Invalid Soap version" if ![:soap, :soap12].includes?(@soap_version)
+      @soap_namespace = (@soap_version == :soap) ? Bronzite::Wsdl::SOAP_1_1 : Bronzite::Wsdl::SOAP_1_2
+      @envelope_namespace = (@soap_version == :soap) ? Bronzite::Wsdl::SOAP_1_1_ENV : Bronzite::Wsdl::SOAP_1_2_ENV
     end
 
     def build(op_name, tns, body_parameters : Array(Hash(String, Parameter))? = nil, input_headers = nil)
       xml_request = XML.build(indent: "") do |xml|
-        xml.element("Envelope", {"xmlns" => Bronzite::Wsdl::SOAP_1_1_ENV}) do
+        xml.element("Envelope", {"xmlns" => @envelope_namespace}) do
           if input_headers
             build_header(xml, input_headers)
           end
@@ -48,11 +53,11 @@ module Bronzite
     def add_element(xml, key, value)
       xml.element(key) do
         case value
-        when Hash
+        when Hash, NamedTuple
           value.each do |k, v|
             add_element(xml, k, v)
           end
-        when Array
+        when Array, Tuple
           value.each do |v|
             add_element(xml, key, v)
           end

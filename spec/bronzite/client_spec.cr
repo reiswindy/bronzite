@@ -19,9 +19,6 @@ XML
       body_params = [{"ubiNum" => 100.as(Bronzite::Parameter)}]
       b_client.request("NumberToWords", body_params).should eq(expected)
     end
-
-#    it "calls NumberToWords correctly via method_missing" do
-#      b_client.NumberToWords.should eq(expected)
-#    end
   end
+
 end
