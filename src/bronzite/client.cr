@@ -31,15 +31,19 @@ module Bronzite
         raise "Unknown function #{function_name}"
       end
 
-      location = s_port.address.location
-      soap_action = s_port.binding.binding_operations[function_name].soap_action
-
       http_headers = HTTP::Headers.new
-      http_headers["Content-Type"] = "text/xml;charset=utf-8"
-      http_headers["SOAPAction"] = soap_action
+
+      if @version == :soap
+        soap_action = s_port.binding.binding_operations[function_name].soap_action
+        http_headers["Content-Type"] = "text/xml;charset=utf-8"
+        http_headers["SOAPAction"] = soap_action
+      else
+        http_headers["Content-Type"] = "application/soap+xml;charset=utf-8"
+      end
 
       xml_request = @builder.build(function_name, @document.target_namespace, body_parameters, input_headers)
 
+      location = s_port.address.location
       response = HTTP::Client.post(location, http_headers, xml_request)
       response.body
     end
