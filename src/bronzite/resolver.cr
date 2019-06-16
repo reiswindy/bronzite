@@ -1,8 +1,3 @@
-require "http"
-require "uri"
-require "xml"
-require "./core_ext/xml"
-
 module Bronzite
   class Resolver
 

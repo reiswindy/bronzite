@@ -1,45 +1,35 @@
-require "./builder"
-require "./document"
-require "./resolver"
-
 module Bronzite
   class Client
-    @builder : Bronzite::Builder
-    @document : Bronzite::Document
+    @builder : Builder
+    @document : Document
     @functions : Hash(String, String)
+    @version : Soap::Version
 
-    def initialize(uri : String, @version = :soap)
-      document = Bronzite::Resolver.new.resolve(uri)
-      @builder = Bronzite::Builder.new(@version)
-      @document = Bronzite::Parser.new(document).parse
-      @functions = @document.soap_functions[@version]
+    def initialize(uri : String, @version = Soap::Version::Soap_1_1)
+      document = Resolver.new.resolve(uri)
+      @builder = Builder.new(@version)
+      @document = Parser.new(document).parse
+      @functions = @document.soap_functions[@version.to_symbol]
     end
 
-    def initialize(@document : Bronzite::Document, @version = :soap)
-      @builder = Bronzite::Builder.new(@version)
-      @functions = @document.soap_functions[@version]
+    def initialize(@document : Document, @version = Soap::Version::Soap_1_1)
+      @builder = Builder.new(@version)
+      @functions = @document.soap_functions[@version.to_symbol]
     end
 
     getter document
     getter functions
 
-    def request(function_name : String, body_parameters : Array(Bronzite::Parameter)? = nil, input_headers : Array(Bronzite::Parameter)? = nil)
-      s_ports = @document.soap_ports[@version]
+    def request(function_name : String, body_parameters : Array(Soap::Parameter)? = nil, input_headers : Array(Soap::Parameter)? = nil)
+      s_ports = @document.soap_ports[@version.to_symbol]
       s_port = s_ports.select {|sp_name, sp| sp.binding.port_type.operations.has_key?(function_name)}.first_value
 
       if !@functions.has_key?(function_name)
         raise "Unknown function #{function_name}"
       end
 
-      http_headers = HTTP::Headers.new
-
-      if @version == :soap
-        soap_action = s_port.binding.binding_operations[function_name].soap_action
-        http_headers["Content-Type"] = "text/xml;charset=utf-8"
-        http_headers["SOAPAction"] = soap_action
-      else
-        http_headers["Content-Type"] = "application/soap+xml;charset=utf-8"
-      end
+      soap_action = s_port.binding.binding_operations[function_name].soap_action
+      http_headers = @version.build_headers(soap_action)
 
       xml_request = @builder.build(function_name, @document.target_namespace, body_parameters, input_headers)
 

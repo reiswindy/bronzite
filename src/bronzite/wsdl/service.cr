@@ -1,5 +1,3 @@
-require "./port"
-
 module Bronzite
   module Wsdl
     class Service

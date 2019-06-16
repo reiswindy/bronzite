@@ -1,5 +1,3 @@
-require "xml"
-
 module Bronzite
   module Wsdl
     class Address

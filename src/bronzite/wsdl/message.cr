@@ -1,6 +1,3 @@
-require "xml"
-require "./part"
-
 module Bronzite
   module Wsdl
     class Message

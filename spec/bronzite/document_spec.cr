@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-describe "Bronzite::Document" do
+describe Bronzite::Document do
   context "Using numberconversion.wsdl" do
     xml = Bronzite::Resolver.new.resolve(SpecHelper::Samples["numberconversion.wsdl"])
     parser = Bronzite::Parser.new(xml)

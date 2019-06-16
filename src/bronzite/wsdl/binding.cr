@@ -1,8 +1,3 @@
-require "xml"
-require "./namespaces"
-require "./port_type"
-require "./binding_operation"
-
 module Bronzite
   module Wsdl
     class Binding

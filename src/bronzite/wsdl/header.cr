@@ -1,6 +1,3 @@
-require "./message"
-require "./header_fault"
-
 module Bronzite
   module Wsdl
     class Header

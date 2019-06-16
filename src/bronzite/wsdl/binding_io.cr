@@ -1,6 +1,3 @@
-require "./body"
-require "./header"
-
 module Bronzite
   module Wsdl
     class BindingIO

@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-describe "Bronzite::Resolver" do
+describe Bronzite::Resolver do
   context "with: Remote URI" do
     resolver = Bronzite::Resolver.new
     xml_doc = resolver.resolve("http://www.dataaccess.com/webservicesserver/numberconversion.wso?wsdl")

@@ -1,5 +1,3 @@
-require "./part"
-
 module Bronzite
   module Wsdl
     class Body

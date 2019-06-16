@@ -1,5 +1,3 @@
-require "xml"
-
 struct XML::Node
   def base_url=(url : String)
     doc_ptr = document.to_unsafe.as(LibXML::Doc*)

@@ -1,6 +1,3 @@
-require "xml"
-require "./operation"
-
 module Bronzite
   module Wsdl
     class PortType

@@ -1,15 +1,13 @@
-require "./wsdl/*"
-
 module Bronzite
   class Document
     @base_uri : String
     @target_namespace : String
     @namespaces : Hash(String, String)
-    @imports : Hash(String, Bronzite::Document)
-    @messages : Hash(String, Bronzite::Wsdl::Message)
-    @port_types : Hash(String, Bronzite::Wsdl::PortType)
-    @bindings : Hash(String, Bronzite::Wsdl::Binding)
-    @services : Hash(String, Bronzite::Wsdl::Service)
+    @imports : Hash(String, Document)
+    @messages : Hash(String, Wsdl::Message)
+    @port_types : Hash(String, Wsdl::PortType)
+    @bindings : Hash(String, Wsdl::Binding)
+    @services : Hash(String, Wsdl::Service)
 
     def initialize(@base_uri, @target_namespace, @namespaces, @imports, @messages, @port_types, @bindings, @services)
     end
@@ -39,7 +37,7 @@ module Bronzite
 
     # Returns all available soap ports, grouped by soap version
     def soap_ports
-      s_ports = Hash(Symbol, Hash(String, Bronzite::Wsdl::Port)).new(Hash(String, Bronzite::Wsdl::Port).new)
+      s_ports = Hash(Symbol, Hash(String, Wsdl::Port)).new(Hash(String, Wsdl::Port).new)
       @services.each do |s_name, service|
         service.ports.each do |p_name, port|
           case port.binding.type

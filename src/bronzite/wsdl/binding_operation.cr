@@ -1,5 +1,3 @@
-require "./binding_io"
-
 module Bronzite
   module Wsdl
     class BindingOperation

@@ -1,6 +1,3 @@
-require "./binding"
-require "./address"
-
 module Bronzite
   module Wsdl
     class Port

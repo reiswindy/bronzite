@@ -4,6 +4,12 @@ describe Bronzite do
   # TODO: Write tests
 
   it "works" do
-    false.should eq(true)
+    client = Bronzite.parse(SpecHelper::Samples["billservice.wsdl"])
+    client.functions.should eq({
+      "getStatus" => "getStatusResponse getStatus(getStatus parameters)",
+      "sendBill" => "sendBillResponse sendBill(sendBill parameters)",
+      "sendPack" => "sendPackResponse sendPack(sendPack parameters)",
+      "sendSummary" => "sendSummaryResponse sendSummary(sendSummary parameters)"
+    })
   end
 end

@@ -1,9 +1,9 @@
 name: bronzite
-version: 0.1.0
+version: 0.2.0
 
 authors:
   - reiswindy <megamanbn@gmail.com>
 
-crystal: 0.24.1
+crystal: 0.29.0
 
 license: MIT

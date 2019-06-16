@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-describe "Bronzite::Client" do
+describe Bronzite::Client do
   context "using numberconversion.wsdl" do
     b_client = Bronzite.parse(SpecHelper::Samples["numberconversion.wsdl"])
 
@@ -16,7 +16,7 @@ describe "Bronzite::Client" do
 XML
 
     it "calls NumberToWords correctly via request method" do
-      body_params = [{"ubiNum" => 100.as(Bronzite::Parameter)}]
+      body_params = [{"ubiNum" => 100.as(Bronzite::Soap::Parameter)}]
       b_client.request("NumberToWords", body_params).should eq(expected)
     end
   end

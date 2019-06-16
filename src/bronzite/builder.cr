@@ -1,23 +1,13 @@
-require "xml"
-require "./wsdl/namespaces"
-
 module Bronzite
-  alias Parameter = Int8 | Int16 | Int32 | Int64 | UInt8 | UInt16 | UInt32 | UInt64 | Float32 | Float64 | String | Array(Parameter) | Hash(String, Parameter)
-
   class Builder
-    @soap_version : Symbol
-    @soap_namespace : String
-    @envelope_namespace : String
+    @soap_version : Soap::Version
 
     def initialize(@soap_version)
-      raise "Invalid Soap version" if ![:soap, :soap12].includes?(@soap_version)
-      @soap_namespace = (@soap_version == :soap) ? Bronzite::Wsdl::SOAP_1_1 : Bronzite::Wsdl::SOAP_1_2
-      @envelope_namespace = (@soap_version == :soap) ? Bronzite::Wsdl::SOAP_1_1_ENV : Bronzite::Wsdl::SOAP_1_2_ENV
     end
 
-    def build(op_name, tns, body_parameters : Array(Hash(String, Parameter))? = nil, input_headers = nil)
+    def build(op_name, tns, body_parameters : Array(Hash(String, Soap::Parameter))? = nil, input_headers : Array(Hash(String, Soap::Parameter))? = nil)
       xml_request = XML.build(indent: "") do |xml|
-        xml.element("Envelope", {"xmlns" => @envelope_namespace}) do
+        xml.element("Envelope", {"xmlns" => @soap_version.envelope_namespace}) do
           if input_headers
             build_header(xml, input_headers)
           end
