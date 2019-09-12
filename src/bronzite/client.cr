@@ -17,8 +17,8 @@ module Bronzite
       @functions = @document.soap_functions[@version.to_symbol]
     end
 
-    getter document
-    getter functions
+    getter :document
+    getter :functions
 
     def request(function_name : String, body_parameters : Array(Soap::Parameter)? = nil, input_headers : Array(Soap::Parameter)? = nil)
       s_ports = @document.soap_ports[@version.to_symbol]
