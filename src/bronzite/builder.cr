@@ -5,12 +5,10 @@ module Bronzite
     def initialize(@soap_version)
     end
 
-    def build(op_name, tns, body_parameters : Array(Hash(String, Soap::Parameter))? = nil, input_headers : Array(Hash(String, Soap::Parameter))? = nil)
+    def build(op_name, tns, body_parameters : Hash(String, Soap::Parameter)? = nil, input_headers : Hash(String, Soap::Parameter)? = nil)
       xml_request = XML.build(indent: "") do |xml|
         xml.element("Envelope", {"xmlns" => @soap_version.envelope_namespace}) do
-          if input_headers
-            build_header(xml, input_headers)
-          end
+          build_header(xml, input_headers) if input_headers
           build_body(op_name, tns, xml, body_parameters)
         end
       end
@@ -18,10 +16,8 @@ module Bronzite
 
     def build_header(xml, input_headers)
       xml.element("Header") do
-        input_headers.each do |e|
-          e.each do |k, v|
-            add_element(xml, k, v)
-          end
+        input_headers.each do |k, v|
+          add_element(xml, k, v)
         end
       end
     end
@@ -30,19 +26,20 @@ module Bronzite
       xml.element("Body") do
         xml.element(op_name, {"xmlns" => tns}) do
           if body_parameters
-            body_parameters.each do |e|
-              e.each do |k, v|
-                add_element(xml, k, v)
-              end
+            body_parameters.each do |k, v|
+              add_element(xml, k, v)
             end
           end
         end
       end
     end
 
-    def add_element(xml, key, value)
-      xml.element(key) do
-        case value
+    def add_element(xml, key, element)
+      attributes = {} of String => String
+      attributes["xmlns"] = element.namespace.not_nil! if element.namespace
+
+      xml.element(key, attributes) do
+        case (value = element.value)
         when Hash, NamedTuple
           value.each do |k, v|
             add_element(xml, k, v)

@@ -16,7 +16,7 @@ describe Bronzite::Client do
 XML
 
     it "calls NumberToWords correctly via request method" do
-      body_params = [{"ubiNum" => 100.as(Bronzite::Soap::Parameter)}]
+      body_params = {"ubiNum" => Bronzite::Soap::Parameter.new(100)}
       b_client.request("NumberToWords", body_params).should eq(expected)
     end
   end

@@ -23,14 +23,14 @@ describe Bronzite::Builder do
 
 XML
       builder.build("getGenerico", "http://ws.wssisvyr.tepsa.com/",
-        [{
-          "seguridad" => {
+        {
+          "seguridad" => Bronzite::Soap::Parameter.from_hash({
             "clave"           => "GenericPassword",
             "ruc"             => "31231231223",
             "usuario"         => "username",
             "usuarioHardware" => "123",
-          },
-        }]
+          }),
+        }
       ).should eq(expected)
     end
   end

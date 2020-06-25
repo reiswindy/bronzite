@@ -20,7 +20,7 @@ module Bronzite
     getter :document
     getter :functions
 
-    def request(function_name : String, body_parameters : Array(Soap::Parameter)? = nil, input_headers : Array(Soap::Parameter)? = nil)
+    def request(function_name : String, body_parameters : Hash(String, Soap::Parameter)? = nil, input_headers : Hash(String, Soap::Parameter)? = nil)
       s_ports = @document.soap_ports[@version.to_symbol]
       s_port = s_ports.select {|sp_name, sp| sp.binding.port_type.operations.has_key?(function_name)}.first_value
 
