@@ -33,5 +33,35 @@ XML
         }
       ).should eq(expected)
     end
+
+    it "adds headers correctly" do
+      expected =
+        <<-XML
+<?xml version="1.0"?>
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">\
+    <Header>\
+        <SecuTokenWS xmlns="http://tempuri.org/">\
+            <UserName>username</UserName>\
+            <Password>password</Password>\
+            <AuthenticationToken>secret-token</AuthenticationToken>\
+        </SecuTokenWS>\
+    </Header>\
+    <Body>\
+        <getSexo xmlns="http://tempuri.org/"/>\
+    </Body>\
+</Envelope>
+
+XML
+
+      builder.build("getSexo", "http://tempuri.org/", nil,
+        {
+          "SecuTokenWS" => Bronzite::Soap::Parameter.from_hash({
+            "UserName"            => "username",
+            "Password"            => "password",
+            "AuthenticationToken" => "secret-token",
+          }, namespace: "http://tempuri.org/"),
+        }
+      ).should eq(expected)
+    end
   end
 end
