@@ -40,11 +40,11 @@ module Bronzite
 
       xml.element(key, attributes) do
         case (value = element.value)
-        when Hash, NamedTuple
+        when Hash
           value.each do |k, v|
             add_element(xml, k, v)
           end
-        when Array, Tuple
+        when Array
           value.each do |v|
             add_element(xml, key, v)
           end
