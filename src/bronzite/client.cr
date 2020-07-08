@@ -20,18 +20,16 @@ module Bronzite
     getter :document
     getter :functions
 
-    def request(function_name : String, body_parameters : Hash(String, Soap::Parameter)? = nil, input_headers : Hash(String, Soap::Parameter)? = nil)
+    def request(function_name : String, soap_body : Hash(String, Soap::Parameter)? = nil, soap_header : Hash(String, Soap::Parameter)? = nil)
+      raise "Unknown function #{function_name}" if !@functions.has_key?(function_name)
+
       s_ports = @document.soap_ports[@version.to_symbol]
       s_port = s_ports.select {|sp_name, sp| sp.binding.port_type.operations.has_key?(function_name)}.first_value
-
-      if !@functions.has_key?(function_name)
-        raise "Unknown function #{function_name}"
-      end
 
       soap_action = s_port.binding.binding_operations[function_name].soap_action
       http_headers = @version.build_headers(soap_action)
 
-      xml_request = @builder.build(function_name, @document.target_namespace, body_parameters, input_headers)
+      xml_request = @builder.build(function_name, @document.target_namespace, soap_body, soap_header)
 
       location = s_port.address.location
       response = HTTP::Client.post(location, http_headers, xml_request)
