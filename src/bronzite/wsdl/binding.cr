@@ -36,9 +36,9 @@ module Bronzite
         b_type = nil.as(Symbol?)
         binding_binding.namespace.try do |binding_type|
           case url = binding_type.href.not_nil!
-          when Bronzite::Wsdl::SOAP_1_1
+          when Bronzite::Wsdl::SOAP1_1
             b_type = :soap
-          when Bronzite::Wsdl::SOAP_1_2
+          when Bronzite::Wsdl::SOAP1_2
             b_type = :soap12
           end
         end

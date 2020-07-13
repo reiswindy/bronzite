@@ -5,14 +5,14 @@ module Bronzite
     @functions : Hash(String, String)
     @version : Soap::Version
 
-    def initialize(uri : String, @version = Soap::Version::Soap_1_1)
+    def initialize(uri : String, @version = Soap::Version::Soap1_1)
       document = Resolver.new.resolve(uri)
       @builder = Builder.new(@version)
       @document = Parser.new(document).parse
       @functions = @document.soap_functions[@version.to_symbol]
     end
 
-    def initialize(@document : Document, @version = Soap::Version::Soap_1_1)
+    def initialize(@document : Document, @version = Soap::Version::Soap1_1)
       @builder = Builder.new(@version)
       @functions = @document.soap_functions[@version.to_symbol]
     end

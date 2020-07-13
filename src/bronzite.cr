@@ -8,7 +8,7 @@ require "./bronzite/**"
 module Bronzite
   VERSION = "0.2.0"
 
-  def self.parse(uri : String, version : Soap::Version = Soap::Version::Soap_1_1)
+  def self.parse(uri : String, version : Soap::Version = Soap::Version::Soap1_1)
     soap_client = Client.new(uri, version)
   end
 

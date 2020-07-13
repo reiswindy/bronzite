@@ -1,5 +1,5 @@
 module Bronzite
-  module Soap::Version::Soap_1_1
+  module Soap::Version::Soap1_1
     extend Soap::Version
 
     NAMESPACE = "http://schemas.xmlsoap.org/wsdl/soap/"

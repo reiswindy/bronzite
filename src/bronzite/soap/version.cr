@@ -8,9 +8,9 @@ module Bronzite
     def self.from_symbol(symbol : Symbol)
       case symbol
       when :soap
-        Soap::Version::Soap_1_1
+        Soap::Version::Soap1_1
       when :soap12
-        Soap::Version::Soap_1_2
+        Soap::Version::Soap1_2
       else
         raise "Invalid soap version"
       end

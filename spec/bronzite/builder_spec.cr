@@ -2,7 +2,7 @@ require "../spec_helper"
 
 describe Bronzite::Builder do
   context "For wsdl" do
-    builder = Bronzite::Builder.new(Bronzite::Soap::Version::Soap_1_1)
+    builder = Bronzite::Builder.new(Bronzite::Soap::Version::Soap1_1)
 
     it "builds correct request" do
       expected =
